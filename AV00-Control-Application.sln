@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV00-Control-Application", "AV00-Control-Application.csproj", "{D00811B3-9B0C-4AF0-9C9C-218350ED6113}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV00-Control-Application", "AV00-Control-Application.csproj", "{D00811B3-9B0C-4AF0-9C9C-218350ED6113}"
+	ProjectSection(ProjectDependencies) = postProject
+		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B} = {708A64BA-3E92-41F1-9F3C-08CD6BEA124B}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV00-Transport", "..\AV00-Transport\AV00-Transport.csproj", "{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +22,10 @@ Global
 		{D00811B3-9B0C-4AF0-9C9C-218350ED6113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D00811B3-9B0C-4AF0-9C9C-218350ED6113}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D00811B3-9B0C-4AF0-9C9C-218350ED6113}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

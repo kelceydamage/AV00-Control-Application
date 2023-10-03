@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 
 namespace AV00_Control_Application
 {
@@ -16,10 +19,11 @@ namespace AV00_Control_Application
                 });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
         }
     }
 }
+ 
