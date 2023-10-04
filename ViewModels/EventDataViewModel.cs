@@ -1,24 +1,23 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+using AV00_Shared.Logging;
 using Transport.Messages;
 
 namespace AV00_Control_Application.ViewModels
 {
-    public class EventDataViewModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Event<LogMessage>> EventStream { get => eventStream; }
-        private readonly ObservableCollection<Event<LogMessage>> eventStream;
+    public class EventDataViewModel
+    {
+        public ObservableCollection<LogMessage> EventStream { get => eventStream; }
+        private readonly ObservableCollection<LogMessage> eventStream;
 
         public EventDataViewModel()
         {
-            LogMessage dummyData = new(Guid.NewGuid(), "TestService", "Issued", "This is a test message");
-            Event<LogMessage> dummy = new("TestService", dummyData, EnumEventType.EventLog, dummyData.Id);
-            eventStream = new()
+            LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
+            eventStream = new() { dummyData };
+            for(var i = 0; i < 20; i++)
             {
-                dummy
-            };
+                eventStream.Add(dummyData);
+            }
         }
-    }
+    } 
 }

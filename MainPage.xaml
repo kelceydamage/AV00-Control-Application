@@ -1,38 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:AV00_Control_Application.ViewModels"
-             x:Class="AV00_Control_Application.MainPage">
+             xmlns:ViewModels="clr-namespace:AV00_Control_Application.ViewModels"
+             xmlns:DataModels ="clr-namespace:Transport.Messages;assembly=AV00-Transport"
+             x:Class="AV00_Control_Application.MainPage"
+             x:Name="mainPage">
     <ContentPage.BindingContext>
-        <viewModels:EventDataViewModel />
+        <ViewModels:EventDataViewModel />
     </ContentPage.BindingContext>
     <ScrollView>
-        <HorizontalStackLayout>
+        <Grid ColumnDefinitions="*,*">
             <VerticalStackLayout
+             Grid.Column="0"
              Spacing="25"
              Padding="30,0"
              VerticalOptions="Center">
 
-                        <Image
+                <Image
                  Source="dotnet_bot.png"
                  SemanticProperties.Description="Cute dot net bot waving hi to you!"
                  HeightRequest="200"
                  HorizontalOptions="Center" />
 
-                        <Label
+                <Label
                  Text="Hello, World!"
                  SemanticProperties.HeadingLevel="Level1"
                  FontSize="32"
                  HorizontalOptions="Center" />
 
-                        <Label
+                <Label
                  Text="Welcome to .NET Multi-platform App UI"
                  SemanticProperties.HeadingLevel="Level2"
                  SemanticProperties.Description="Welcome to dot net Multi platform App U I"
                  FontSize="18"
                  HorizontalOptions="Center" />
 
-                        <Button
+                <Button
                  x:Name="CounterBtn"
                  Text="Click me"
                  SemanticProperties.Hint="Counts the number of times you click"
@@ -40,17 +43,32 @@
                  HorizontalOptions="Center" />
 
             </VerticalStackLayout>
-            <CollectionView x:Name="Events" ItemsSource="{Binding EventStream}">
+            <CollectionView 
+                Grid.Column="1"
+                HeightRequest="750"
+                x:Name="Events"
+                ItemsSource="{Binding Path=BindingContext.EventStream, Source={x:Reference mainPage}}"
+                VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="*,*,*,*">
-                        <Label Text="Service" Grid.Column="0"/>
-                        <Label Text="Type" Grid.Column="1"/>
-                        <Label Text="Message" Grid.Column="2"/>
+                        <Label Text="EventId" FontAttributes="Bold" Grid.Column="0"/>
+                        <Label Text="Service" FontAttributes="Bold" Grid.Column="1"/>
+                        <Label Text="Type" FontAttributes="Bold" Grid.Column="2"/>
+                        <Label Text="Message" FontAttributes="Bold" Grid.Column="3"/>
                     </Grid>
                 </CollectionView.Header>
-                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="DataModels:LogMessage">
+                        <Grid ColumnDefinitions="*,*,*,*">
+                            <Label Text="{Binding Id}" Grid.Column="0"/>
+                            <Label Text="{Binding ServiceName}" Grid.Column="1"/>
+                            <Label Text="{Binding LogType}" Grid.Column="2"/>
+                            <Label Text="{Binding Message}" Grid.Column="3"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
             </CollectionView>
-        </HorizontalStackLayout>
+        </Grid>
        
     </ScrollView>
 

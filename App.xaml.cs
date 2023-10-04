@@ -1,4 +1,6 @@
-﻿namespace AV00_Control_Application
+﻿using Microsoft.Maui.Controls.Handlers.Items;
+
+namespace AV00_Control_Application
 {
     public partial class App : Application
     {
@@ -7,6 +9,13 @@
             InitializeComponent();
 
             MainPage = new AppShell();
+            #if WINDOWS
+            CollectionViewHandler.Mapper.AppendToMapping("HeaderAndFooterFix", (_, collectionView) =>
+            {
+                collectionView.AddLogicalChild(collectionView.Header as Element);
+                collectionView.AddLogicalChild(collectionView.Footer as Element);
+            });
+            #endif 
         }
     }
 }

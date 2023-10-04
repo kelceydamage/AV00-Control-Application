@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV00-Control-Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV00-Transport", "..\AV00-Transport\AV00-Transport.csproj", "{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV00-Shared", "..\AV00-Shared\AV00-Shared.csproj", "{C2B954D4-04D9-48B9-9E69-846966672DFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{708A64BA-3E92-41F1-9F3C-08CD6BEA124B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B954D4-04D9-48B9-9E69-846966672DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B954D4-04D9-48B9-9E69-846966672DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B954D4-04D9-48B9-9E69-846966672DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B954D4-04D9-48B9-9E69-846966672DFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
