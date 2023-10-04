@@ -8,8 +8,12 @@
     <ContentPage.BindingContext>
         <ViewModels:EventDataViewModel />
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        
+    </ContentPage.Resources>
+    
     <ScrollView>
-        <Grid ColumnDefinitions="*,*">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
             <VerticalStackLayout
              Grid.Column="0"
              Spacing="25"
@@ -43,11 +47,19 @@
                  HorizontalOptions="Center" />
 
             </VerticalStackLayout>
+            <Picker x:Name="picker"
+                Title="Filter By Log Message Type"
+                Grid.Column="1"
+                Grid.Row="0"
+                ItemsSource="{Binding EnumLogMessageTypePicker}">
+            </Picker>
             <CollectionView 
                 Grid.Column="1"
-                HeightRequest="750"
+                Grid.Row="1"
+                HeightRequest="400"
                 x:Name="Events"
                 ItemsSource="{Binding Path=BindingContext.EventStream, Source={x:Reference mainPage}}"
+                SelectionMode="Single"
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="*,*,*,*">
