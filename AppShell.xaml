@@ -3,7 +3,7 @@
     x:Class="AV00_Control_Application.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:AV00_Control_Application"
+    xmlns:local="clr-namespace:AV00_Control_Application.View"
     Shell.FlyoutBehavior="Disabled"
     Title="AV00_Control_Application">
 

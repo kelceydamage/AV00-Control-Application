@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:DataModels ="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
-             xmlns:Controls="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
-             x:Class="AV00_Control_Application.MainPage"
+             xmlns:DataModel ="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
+             xmlns:Control="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
+             xmlns:ViewModel="clr-namespace:AV00_Control_Application.ViewModel"
+             x:Class="AV00_Control_Application.View.MainPage"
              x:Name="mainPage">
 
     <ScrollView>
@@ -37,7 +38,6 @@
                  x:Name="CounterBtn"
                  Text="Click me"
                  SemanticProperties.Hint="Counts the number of times you click"
-                 Clicked="OnCounterClicked"
                  HorizontalOptions="Center" />
 
             </VerticalStackLayout>
@@ -45,9 +45,9 @@
                 Grid.Column="1"
                 Grid.Row="0"
                 x:Name="LogTypeView"
-                ItemsSource="{Binding Path=EnumLogMessageTypePicker, Source={x:Reference mainPage}}"
+                ItemsSource="{Binding Path=EnumLogMessageTypePicker, Source={x:Reference ViewModel}}"
                 SelectionMode="Multiple"
-                SelectionChanged="OnLogTypeViewSelectionChanged">
+                SelectionChanged="ViewModel:OnLogTypeViewSelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnDefinitions="*">
@@ -67,7 +67,7 @@
                 Grid.Row="2"
                 HeightRequest="400"
                 x:Name="FilteredEventsView"
-                ItemsSource="{Binding Path=EventStream, Source={x:Reference mainPage}}"
+                ItemsSource="{Binding Path=FilteredEventStream, Source={x:Reference ViewModel}}"
                 SelectionMode="Single"
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
@@ -80,7 +80,7 @@
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="DataModels:LogMessage">
+                    <DataTemplate x:DataType="DataModel:LogMessage">
                         <Grid ColumnDefinitions="*, *,*,*,*">
                             <Label Text="{Binding TimeStamp}" Grid.Column="0"/>
                             <Label Text="{Binding Id}" Grid.Column="1"/>
