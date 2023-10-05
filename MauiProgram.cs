@@ -26,4 +26,3 @@ namespace AV00_Control_Application
         }
     }
 }
- 
