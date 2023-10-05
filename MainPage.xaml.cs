@@ -20,5 +20,10 @@
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
+
+        private void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Console.WriteLine($"Selection changed {e.CurrentSelection}");
+        }
     }
 }
