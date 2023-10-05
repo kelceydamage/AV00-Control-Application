@@ -1,8 +1,7 @@
 ﻿using AV00_Shared.Logging;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Transport.Messages;
+using AV00_Shared.Messages;
 
 namespace AV00_Control_Application
 {

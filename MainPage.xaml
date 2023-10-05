@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:DataModels ="clr-namespace:Transport.Messages;assembly=AV00-Transport"
+             xmlns:DataModels ="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
              xmlns:Controls="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
              x:Class="AV00_Control_Application.MainPage"
              x:Name="mainPage">
@@ -71,20 +71,22 @@
                 SelectionMode="Single"
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*,*,*,*">
-                        <Label Text="EventId" FontAttributes="Bold" Grid.Column="0"/>
-                        <Label Text="Service" FontAttributes="Bold" Grid.Column="1"/>
-                        <Label Text="Type" FontAttributes="Bold" Grid.Column="2"/>
-                        <Label Text="Message" FontAttributes="Bold" Grid.Column="3"/>
+                    <Grid ColumnDefinitions="*,*,*,*,*">
+                        <Label Text="TimeStamp" FontAttributes="Bold" Grid.Column="0"/>
+                        <Label Text="EventId" FontAttributes="Bold" Grid.Column="1"/>
+                        <Label Text="Service" FontAttributes="Bold" Grid.Column="2"/>
+                        <Label Text="Type" FontAttributes="Bold" Grid.Column="3"/>
+                        <Label Text="Message" FontAttributes="Bold" Grid.Column="4"/>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="DataModels:LogMessage">
-                        <Grid ColumnDefinitions="*,*,*,*">
-                            <Label Text="{Binding Id}" Grid.Column="0"/>
-                            <Label Text="{Binding ServiceName}" Grid.Column="1"/>
-                            <Label Text="{Binding LogType}" Grid.Column="2"/>
-                            <Label Text="{Binding Message}" Grid.Column="3"/>
+                        <Grid ColumnDefinitions="*, *,*,*,*">
+                            <Label Text="{Binding TimeStamp}" Grid.Column="0"/>
+                            <Label Text="{Binding Id}" Grid.Column="1"/>
+                            <Label Text="{Binding ServiceName}" Grid.Column="2"/>
+                            <Label Text="{Binding LogType}" Grid.Column="3"/>
+                            <Label Text="{Binding Message}" Grid.Column="4"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
