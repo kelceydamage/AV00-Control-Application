@@ -6,13 +6,7 @@
              xmlns:Controls="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
              x:Class="AV00_Control_Application.MainPage"
              x:Name="mainPage">
-    <ContentPage.BindingContext>
-        <ViewModels:EventDataViewModel />
-    </ContentPage.BindingContext>
-    <ContentPage.Resources>
-        
-    </ContentPage.Resources>
-    
+
     <ScrollView>
         <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
             <VerticalStackLayout
@@ -52,7 +46,7 @@
                 Grid.Column="1"
                 Grid.Row="0"
                 x:Name="LogTypeView"
-                ItemsSource="{Binding Path=BindingContext.EnumLogMessageTypePicker, Source={x:Reference mainPage}}"
+                ItemsSource="{Binding Path=EnumLogMessageTypePicker, Source={x:Reference mainPage}}"
                 SelectionMode="Multiple"
                 SelectionChanged="OnLogTypeViewSelectionChanged">
                 <CollectionView.ItemTemplate>
@@ -63,15 +57,19 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-            <CollectionView 
+            <Entry
+                x:Name="FilterByLogType"
                 Grid.Column="1"
                 Grid.Row="1"
+>
+            </Entry>
+            <CollectionView 
+                Grid.Column="1"
+                Grid.Row="2"
                 HeightRequest="400"
-                x:Name="Events"
-                ItemsSource="{Binding Path=BindingContext.EventStream, Source={x:Reference mainPage}}"
+                x:Name="FilteredEventsView"
+                ItemsSource="{Binding Path=EventStream, Source={x:Reference mainPage}}"
                 SelectionMode="Single"
-                
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="*,*,*,*">
