@@ -7,8 +7,9 @@ using Transport.Client;
 
 namespace AV00_Control_Application.ViewModel
 {
-    public partial class ApplicationMainViewModel
+    public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public List<LogMessage> EventStream { get => eventStream; }
         private readonly List<LogMessage> eventStream;
         public ObservableCollection<LogMessage> FilteredEventStream { get => filteredEventStream; }
@@ -17,7 +18,7 @@ namespace AV00_Control_Application.ViewModel
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
 
-        public ApplicationMainViewModel(ITransportClient TransportClient)
+        public ApplicationMainViewModel() //ITransportClient TransportClient)
         {
             transportClient = TransportClient;
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
@@ -58,9 +59,14 @@ namespace AV00_Control_Application.ViewModel
             Trace.WriteLine($"Text changed {e.NewTextValue}");
         }
 
-        public bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
+        public static bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
         {
             return SelectedFilters.Contains(Message.LogType);
+        }
+
+        void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

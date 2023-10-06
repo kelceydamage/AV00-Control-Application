@@ -45,9 +45,9 @@
                 Grid.Column="1"
                 Grid.Row="0"
                 x:Name="LogTypeView"
-                ItemsSource="{Binding Path=EnumLogMessageTypePicker, Source={x:Reference ViewModel}}"
+                ItemsSource="{Binding EnumLogMessageTypePicker}"
                 SelectionMode="Multiple"
-                SelectionChanged="ViewModel:OnLogTypeViewSelectionChanged">
+                SelectionChanged="OnLogTypeViewSelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnDefinitions="*">
@@ -67,7 +67,7 @@
                 Grid.Row="2"
                 HeightRequest="400"
                 x:Name="FilteredEventsView"
-                ItemsSource="{Binding Path=FilteredEventStream, Source={x:Reference ViewModel}}"
+                ItemsSource="{Binding FilteredEventStream}"
                 SelectionMode="Single"
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
