@@ -44,16 +44,19 @@
                      HorizontalOptions="Center" />
 
                 </VerticalStackLayout>
+                <VerticalStackLayout
+                    Grid.Column="1">
                 <CollectionView 
                     Grid.Column="1"
                     Grid.Row="0"
                     x:Name="LogTypeView"
                     ItemsSource="{Binding EnumLogMessageTypePicker}"
+                    HeightRequest="200"
                     SelectionMode="Multiple"
                     SelectionChanged="OnLogTypeViewSelectionChanged">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="*">
+                            <Grid ColumnDefinitions="100">
                                 <Label Text="{Binding .}" Grid.Column="0"/>
                             </Grid>
                         </DataTemplate>
@@ -63,17 +66,24 @@
                     x:Name="FilterByLogType"
                     Grid.Column="1"
                     Grid.Row="1">
+                    
                 </Entry>
+                </VerticalStackLayout>
             </Grid>
-            <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*" RowSpacing="6" ColumnSpacing="6">
+            <Grid 
+                Grid.Row="1" 
+                ColumnDefinitions="*" 
+                RowDefinitions="*" 
+                RowSpacing="6"
+                ColumnSpacing="6">
                 <CollectionView 
-                        Grid.Column="0"
-                        Grid.Row="2"
-                        HeightRequest="400"
-                        x:Name="FilteredEventsView"
-                        ItemsSource="{Binding FilteredEventStream}"
-                        SelectionMode="Single"
-                        VerticalScrollBarVisibility="Always">
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    HeightRequest="400"
+                    x:Name="FilteredEventsView"
+                    ItemsSource="{Binding FilteredEventStream}"
+                    SelectionMode="Single"
+                    VerticalScrollBarVisibility="Always">
                     <CollectionView.Header>
                         <Grid ColumnDefinitions="2*,2*,*,*,4*">
                             <Label Text="TimeStamp" FontAttributes="Bold" Grid.Column="0"/>
@@ -87,20 +97,25 @@
                         <DataTemplate x:DataType="ExternModel:LogMessage">
                             <Grid ColumnDefinitions="2*,2*,*,*,4*">
                                 <Label 
-                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=TimeStamp}" 
-                                        Grid.Column="0"/>
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=TimeStamp}" 
+                                    Grid.Column="0"
+                                    FontSize="10"/>
                                 <Label 
-                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Id}" 
-                                        Grid.Column="1"/>
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Id}" 
+                                    Grid.Column="1"
+                                    FontSize="10"/>
                                 <Label 
-                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=ServiceName}" 
-                                        Grid.Column="2"/>
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=ServiceName}" 
+                                    Grid.Column="2"
+                                    FontSize="10"/>
                                 <Label 
-                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=LogType}" 
-                                        Grid.Column="3"/>
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=LogType}" 
+                                    Grid.Column="3"
+                                    FontSize="10"/>
                                 <Label 
-                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Message}" 
-                                        Grid.Column="4"/>
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Message}" 
+                                    Grid.Column="4"
+                                    FontSize="10"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
