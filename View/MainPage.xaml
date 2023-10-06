@@ -1,98 +1,112 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:DataModel ="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
+             xmlns:ExternModel="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
+             xmlns:Model="clr-namespace:AV00_Control_Application.Model"
              xmlns:Control="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
              xmlns:ViewModel="clr-namespace:AV00_Control_Application.ViewModel"
              x:Class="AV00_Control_Application.View.MainPage"
              x:Name="mainPage">
 
     <ScrollView>
-        <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
-            <VerticalStackLayout
-             Grid.Column="0"
-             Spacing="25"
-             Padding="30,0"
-             VerticalOptions="Center">
+        <Grid RowDefinitions="*,*" ColumnDefinitions="*">
+            <Grid Grid.Row="0" ColumnDefinitions="*,*" RowDefinitions="*,*" RowSpacing="6">
+                <VerticalStackLayout
+                 Grid.Column="0"
+                 Grid.Row="0"
+                 Spacing="25"
+                 Padding="30,0"
+                 VerticalOptions="Center">
 
-                <Image
-                 Source="dotnet_bot.png"
-                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                 HeightRequest="200"
-                 HorizontalOptions="Center" />
+                    <Image
+                     Source="dotnet_bot.png"
+                     SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                     HeightRequest="200"
+                     HorizontalOptions="Center" />
 
-                <Label
-                 Text="Hello, World!"
-                 SemanticProperties.HeadingLevel="Level1"
-                 FontSize="32"
-                 HorizontalOptions="Center" />
+                    <Label
+                     Text="Hello, World!"
+                     SemanticProperties.HeadingLevel="Level1"
+                     FontSize="32"
+                     HorizontalOptions="Center" />
 
-                <Label
-                 Text="Welcome to .NET Multi-platform App UI"
-                 SemanticProperties.HeadingLevel="Level2"
-                 SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                 FontSize="18"
-                 HorizontalOptions="Center" />
+                    <Label
+                     Text="Welcome to .NET Multi-platform App UI"
+                     SemanticProperties.HeadingLevel="Level2"
+                     SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+                     FontSize="18"
+                     HorizontalOptions="Center" />
 
-                <Button
-                 x:Name="CounterBtn"
-                 Text="Click me"
-                 SemanticProperties.Hint="Counts the number of times you click"
-                 HorizontalOptions="Center" />
+                    <Button
+                     x:Name="CounterBtn"
+                     Text="Click me"
+                     SemanticProperties.Hint="Counts the number of times you click"
+                     HorizontalOptions="Center" />
 
-            </VerticalStackLayout>
-            <CollectionView 
-                Grid.Column="1"
-                Grid.Row="0"
-                x:Name="LogTypeView"
-                ItemsSource="{Binding EnumLogMessageTypePicker}"
-                SelectionMode="Multiple"
-                SelectionChanged="OnLogTypeViewSelectionChanged">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="*">
-                            <Label Text="{Binding .}" Grid.Column="0"/>
+                </VerticalStackLayout>
+                <CollectionView 
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    x:Name="LogTypeView"
+                    ItemsSource="{Binding EnumLogMessageTypePicker}"
+                    SelectionMode="Multiple"
+                    SelectionChanged="OnLogTypeViewSelectionChanged">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*">
+                                <Label Text="{Binding .}" Grid.Column="0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Entry
+                    x:Name="FilterByLogType"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                </Entry>
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*" RowSpacing="6" ColumnSpacing="6">
+                <CollectionView 
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        HeightRequest="400"
+                        x:Name="FilteredEventsView"
+                        ItemsSource="{Binding FilteredEventStream}"
+                        SelectionMode="Single"
+                        VerticalScrollBarVisibility="Always">
+                    <CollectionView.Header>
+                        <Grid ColumnDefinitions="2*,2*,*,*,4*">
+                            <Label Text="TimeStamp" FontAttributes="Bold" Grid.Column="0"/>
+                            <Label Text="EventId" FontAttributes="Bold" Grid.Column="1"/>
+                            <Label Text="Service" FontAttributes="Bold" Grid.Column="2"/>
+                            <Label Text="Type" FontAttributes="Bold" Grid.Column="3"/>
+                            <Label Text="Message" FontAttributes="Bold" Grid.Column="4"/>
                         </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <Entry
-                x:Name="FilterByLogType"
-                Grid.Column="1"
-                Grid.Row="1"
->
-            </Entry>
-            <CollectionView 
-                Grid.Column="1"
-                Grid.Row="2"
-                HeightRequest="400"
-                x:Name="FilteredEventsView"
-                ItemsSource="{Binding FilteredEventStream}"
-                SelectionMode="Single"
-                VerticalScrollBarVisibility="Always">
-                <CollectionView.Header>
-                    <Grid ColumnDefinitions="*,*,*,*,*">
-                        <Label Text="TimeStamp" FontAttributes="Bold" Grid.Column="0"/>
-                        <Label Text="EventId" FontAttributes="Bold" Grid.Column="1"/>
-                        <Label Text="Service" FontAttributes="Bold" Grid.Column="2"/>
-                        <Label Text="Type" FontAttributes="Bold" Grid.Column="3"/>
-                        <Label Text="Message" FontAttributes="Bold" Grid.Column="4"/>
-                    </Grid>
-                </CollectionView.Header>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="DataModel:LogMessage">
-                        <Grid ColumnDefinitions="*, *,*,*,*">
-                            <Label Text="{Binding TimeStamp}" Grid.Column="0"/>
-                            <Label Text="{Binding Id}" Grid.Column="1"/>
-                            <Label Text="{Binding ServiceName}" Grid.Column="2"/>
-                            <Label Text="{Binding LogType}" Grid.Column="3"/>
-                            <Label Text="{Binding Message}" Grid.Column="4"/>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="ExternModel:LogMessage">
+                            <Grid ColumnDefinitions="2*,2*,*,*,4*">
+                                <Label 
+                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=TimeStamp}" 
+                                        Grid.Column="0"/>
+                                <Label 
+                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Id}" 
+                                        Grid.Column="1"/>
+                                <Label 
+                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=ServiceName}" 
+                                        Grid.Column="2"/>
+                                <Label 
+                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=LogType}" 
+                                        Grid.Column="3"/>
+                                <Label 
+                                        Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Message}" 
+                                        Grid.Column="4"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
         </Grid>
-       
     </ScrollView>
 
 </ContentPage>
