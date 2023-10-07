@@ -21,7 +21,7 @@ namespace AV00_Control_Application.ViewModels
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
         private readonly Task continualDatabaseUpdateTask;
-        private List<object> currentFilter = new();
+        private IReadOnlyList<object> currentFilter = new List<object>();
         private ApplicationDbContext databaseContext;
 
         public ApplicationMainViewModel(ITransportClient DITransportClient, ApplicationDbContext DatabaseContext)
@@ -68,13 +68,14 @@ namespace AV00_Control_Application.ViewModels
 
         private void UpdateFilteredEventStream(SelectionChangedEventArgs EventArgs)
         {
-            currentFilter = EventArgs.CurrentSelection.ToList();
+            currentFilter = EventArgs.CurrentSelection;
             Trace.WriteLine($"Selection changed {EventArgs.CurrentSelection}");
             IQueryable<LogMessage> query = from message in databaseContext.LogMessages
                                   where currentFilter.Contains(message.LogType)
                                   select message;
-            var queryResults = query.Take(100).ToList();
-            Trace.WriteLine($"Query Res Count: {queryResults.Count}");
+            // Remove once satisfied with debugging.
+            Trace.WriteLine($"Query Res Count: {query.Count()}");
+
             filteredEventStream = new(query.Take(100));
             OnPropertyChanged(nameof(FilteredEventStream));
         }
