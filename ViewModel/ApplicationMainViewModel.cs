@@ -11,8 +11,6 @@ namespace AV00_Control_Application.ViewModel
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public List<LogMessage> EventStream { get => eventStream; }
-        private readonly List<LogMessage> eventStream;
         public ObservableCollection<LogMessage> FilteredEventStream { get => filteredEventStream; }
         private readonly ObservableCollection<LogMessage> filteredEventStream;
         public EnumLogMessageType[] EnumLogMessageTypePicker { get => Enum.GetValues<EnumLogMessageType>(); }
@@ -20,37 +18,39 @@ namespace AV00_Control_Application.ViewModel
         private readonly ITransportClient transportClient;
         private readonly Task continualDatabaseUpdateTask;
 
-        public ApplicationMainViewModel(ITransportClient TransportClient)
+        public ApplicationMainViewModel(ITransportClient DITransportClient)
         {
-            transportClient = TransportClient;
+            transportClient = DITransportClient;
             TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-            //eventStream = new() { dummyData };
             filteredEventStream = new() { dummyData };
             continualDatabaseUpdateTask = ContinualDatabaseUpdateAsync();
         }
 
-        public void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public async Task OnLogTypeViewSelectionChangedAsync(object sender, SelectionChangedEventArgs e)
         {
             Trace.WriteLine($"Selection changed {e.CurrentSelection}");
-            List<LogMessage> TempFiltered;
-            TempFiltered = FilteredEventStream.Where(logMessage => Contains(logMessage, e.CurrentSelection)).ToList();
-            for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
+            await Task.Run(() =>
             {
-                var item = FilteredEventStream[i];
-                if (!TempFiltered.Contains(item))
+                List<LogMessage> TempFiltered;
+                TempFiltered = FilteredEventStream.Where(logMessage => Contains(logMessage, e.CurrentSelection)).ToList();
+                for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
                 {
-                    FilteredEventStream.Remove(item);
+                    var item = FilteredEventStream[i];
+                    if (!TempFiltered.Contains(item))
+                    {
+                        FilteredEventStream.Remove(item);
+                    }
                 }
-            }
-            foreach (var item in TempFiltered)
-            {
-                if (!FilteredEventStream.Contains(item))
+                foreach (var item in TempFiltered)
                 {
-                    Trace.WriteLine($"Adding {item}, count={FilteredEventStream.Count}");
-                    FilteredEventStream.Add(item);
+                    if (!FilteredEventStream.Contains(item))
+                    {
+                        Trace.WriteLine($"Adding {item}, count={FilteredEventStream.Count}");
+                        FilteredEventStream.Add(item);
+                    }
                 }
-            }
+            });
         }
 
         private async Task ContinualDatabaseUpdateAsync()
@@ -76,17 +76,17 @@ namespace AV00_Control_Application.ViewModel
             return true;
         }
 
-        private void OnFilterByLogTypeTextChanged(object sender, TextChangedEventArgs e)
+        private static void OnFilterByLogTypeTextChanged(object sender, TextChangedEventArgs e)
         {
             Trace.WriteLine($"Text changed {e.NewTextValue}");
         }
 
-        public static bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
+        private static bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
         {
             return SelectedFilters.Contains(Message.LogType);
         }
 
-        void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

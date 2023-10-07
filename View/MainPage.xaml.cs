@@ -17,7 +17,7 @@ namespace AV00_Control_Application.View
         private void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Trace.WriteLine($"MainPage OnLogTypeViewSelectionChanged");
-            viewModel.OnLogTypeViewSelectionChanged(sender, e);
+            var _ = viewModel.OnLogTypeViewSelectionChangedAsync(sender, e);
         }
     }
 }
