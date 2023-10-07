@@ -1,5 +1,6 @@
 ﻿using AV00_Shared.Logging;
 using AV00_Shared.Messages;
+using Microsoft.Maui.Layouts;
 using NetMQ;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,6 +11,8 @@ namespace AV00_Control_Application.ViewModel
 {
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
+        public List<LogMessage> FakeDB { get => fakeDB; }
+        private readonly List<LogMessage> fakeDB;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<LogMessage> FilteredEventStream { get => filteredEventStream; }
         private readonly ObservableCollection<LogMessage> filteredEventStream;
@@ -17,57 +20,68 @@ namespace AV00_Control_Application.ViewModel
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
         private readonly Task continualDatabaseUpdateTask;
+        private IReadOnlyList<object> currentFilter;
 
         public ApplicationMainViewModel(ITransportClient DITransportClient)
         {
             transportClient = DITransportClient;
             TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-            filteredEventStream = new() { dummyData };
-            continualDatabaseUpdateTask = ContinualDatabaseUpdateAsync();
+            fakeDB = new List<LogMessage>() { dummyData };
+            filteredEventStream = new(fakeDB);
+            continualDatabaseUpdateTask = StartDatabaseUpdateThread();
         }
 
         public async Task OnLogTypeViewSelectionChangedAsync(object sender, SelectionChangedEventArgs e)
         {
-            Trace.WriteLine($"Selection changed {e.CurrentSelection}");
-            await Task.Run(() =>
-            {
-                List<LogMessage> TempFiltered;
-                TempFiltered = FilteredEventStream.Where(logMessage => Contains(logMessage, e.CurrentSelection)).ToList();
-                for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
-                {
-                    var item = FilteredEventStream[i];
-                    if (!TempFiltered.Contains(item))
-                    {
-                        FilteredEventStream.Remove(item);
-                    }
-                }
-                foreach (var item in TempFiltered)
-                {
-                    if (!FilteredEventStream.Contains(item))
-                    {
-                        Trace.WriteLine($"Adding {item}, count={FilteredEventStream.Count}");
-                        FilteredEventStream.Add(item);
-                    }
-                }
-            });
+            await Task.Run(() => UpdateFilteredEventStream(e));
+        }
+
+        private Task StartDatabaseUpdateThread()
+        {
+            return Task.Run(() => ContinualDatabaseUpdateAsync());
         }
 
         private async Task ContinualDatabaseUpdateAsync()
         {
-            await Task.Run(() =>
+            while (true)
             {
-                while (true)
+                if (FakeDB.Count < 200)
                 {
-                    if (FilteredEventStream.Count < 200)
+                    LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
+                    fakeDB.Add(dummyData);
+                    if (Contains(dummyData, currentFilter))
                     {
-                        LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
                         FilteredEventStream.Add(dummyData);
                     }
-                    TransportClient.ProcessPendingEventsAsync();
-                    Thread.Sleep(1000);
                 }
-            });
+                await TransportClient.ProcessPendingEventsAsync();
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void UpdateFilteredEventStream(SelectionChangedEventArgs EventArgs)
+        {
+            currentFilter = EventArgs.CurrentSelection;
+            Trace.WriteLine($"Selection changed {EventArgs.CurrentSelection}");
+            List<LogMessage> TempFiltered;
+            TempFiltered = fakeDB.AsParallel().Where(logMessage => Contains(logMessage, EventArgs.CurrentSelection)).ToList();
+            for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
+            {
+                var item = FilteredEventStream[i];
+                if (!TempFiltered.Contains(item))
+                {
+                    FilteredEventStream.Remove(item);
+                }
+            }
+            foreach (var item in TempFiltered)
+            {
+                if (!FilteredEventStream.Contains(item))
+                {
+                    Trace.WriteLine($"Adding {item}, count={FilteredEventStream.Count}");
+                    FilteredEventStream.Add(item);
+                }
+            }
         }
 
         private static bool OnMessageReceiveCallback(NetMQMessage MQMessage)
@@ -83,6 +97,10 @@ namespace AV00_Control_Application.ViewModel
 
         private static bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
         {
+            if ( SelectedFilters == null )
+            {
+                return false;
+            }
             return SelectedFilters.Contains(Message.LogType);
         }
 

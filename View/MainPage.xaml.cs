@@ -14,10 +14,9 @@ namespace AV00_Control_Application.View
             InitializeComponent();
         }
 
-        //TODO: This feels bad, firing many of these could lead to an unpredictable view of the data.
+        //TODO: This feels bad... Investigating.
         private void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Trace.WriteLine($"MainPage OnLogTypeViewSelectionChanged");
             var _ = viewModel.OnLogTypeViewSelectionChangedAsync(sender, e);
         }
     }
