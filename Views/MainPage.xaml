@@ -46,7 +46,7 @@
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     Grid.Column="1">
-                <CollectionView 
+                    <CollectionView 
                     Grid.Column="1"
                     Grid.Row="0"
                     x:Name="LogTypeView"
@@ -54,10 +54,10 @@
                     HeightRequest="200"
                     SelectionMode="Multiple"
                     SelectionChanged="OnLogTypeViewSelectionChanged">
-                    <CollectionView.ItemTemplate>
+                        <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="100">
-                                <Label Text="{Binding .}" Grid.Column="0"/>
+                                    <Label Text="{Binding .}" Grid.Column="0"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

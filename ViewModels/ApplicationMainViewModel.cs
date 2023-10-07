@@ -1,34 +1,36 @@
-﻿using AV00_Shared.Logging;
+﻿using AV00_Control_Application.Models;
+using AV00_Shared.Logging;
 using AV00_Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Layouts;
 using NetMQ;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using Transport.Client;
+using Transport.Messages;
 
 namespace AV00_Control_Application.ViewModels
 {
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
-        public List<LogMessage> FakeDB { get => fakeDB; }
-        private readonly List<LogMessage> fakeDB;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<LogMessage> FilteredEventStream { get => filteredEventStream; }
-        private readonly ObservableCollection<LogMessage> filteredEventStream;
+        private ObservableCollection<LogMessage> filteredEventStream;
         public EnumLogMessageType[] EnumLogMessageTypePicker { get => Enum.GetValues<EnumLogMessageType>(); }
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
         private readonly Task continualDatabaseUpdateTask;
-        private IReadOnlyList<object> currentFilter;
+        private List<object> currentFilter = new();
+        private ApplicationDbContext databaseContext;
 
-        public ApplicationMainViewModel(ITransportClient DITransportClient)
+        public ApplicationMainViewModel(ITransportClient DITransportClient, ApplicationDbContext DatabaseContext)
         {
+            databaseContext = DatabaseContext;
             transportClient = DITransportClient;
             TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-            fakeDB = new List<LogMessage>() { dummyData };
-            filteredEventStream = new(fakeDB);
+            filteredEventStream = new() { dummyData };
             continualDatabaseUpdateTask = StartDatabaseUpdateThread();
         }
 
@@ -44,64 +46,49 @@ namespace AV00_Control_Application.ViewModels
 
         private async Task ContinualDatabaseUpdateAsync()
         {
+            int i = 0;
             while (true)
             {
-                if (FakeDB.Count < 200)
+                if (i < 200)
                 {
                     LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-                    fakeDB.Add(dummyData);
-                    if (Contains(dummyData, currentFilter))
+                    databaseContext.Add(dummyData);
+                    databaseContext.SaveChanges();
+                    if (currentFilter.Contains(dummyData.LogType))
                     {
                         FilteredEventStream.Add(dummyData);
                     }
                 }
                 await TransportClient.ProcessPendingEventsAsync();
+                i++;
                 Thread.Sleep(1000);
             }
         }
 
         private void UpdateFilteredEventStream(SelectionChangedEventArgs EventArgs)
         {
-            currentFilter = EventArgs.CurrentSelection;
+            currentFilter = EventArgs.CurrentSelection.ToList();
             Trace.WriteLine($"Selection changed {EventArgs.CurrentSelection}");
-            List<LogMessage> TempFiltered;
-            TempFiltered = fakeDB.AsParallel().Where(logMessage => Contains(logMessage, EventArgs.CurrentSelection)).ToList();
-            for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
-            {
-                var item = FilteredEventStream[i];
-                if (!TempFiltered.Contains(item))
-                {
-                    FilteredEventStream.Remove(item);
-                }
-            }
-            foreach (var item in TempFiltered)
-            {
-                if (!FilteredEventStream.Contains(item))
-                {
-                    Trace.WriteLine($"Adding {item}, count={FilteredEventStream.Count}");
-                    FilteredEventStream.Add(item);
-                }
-            }
+            IQueryable<LogMessage> query = from message in databaseContext.LogMessages
+                                  where currentFilter.Contains(message.LogType)
+                                  select message;
+            var queryResults = query.ToList();
+            Trace.WriteLine($"Query Res Count: {queryResults.Count}");
+            filteredEventStream = new(query);
+            OnPropertyChanged(nameof(FilteredEventStream));
         }
 
-        private static bool OnMessageReceiveCallback(NetMQMessage MQMessage)
+        private bool OnMessageReceiveCallback(NetMQMessage MQMessage)
         {
             Trace.WriteLine($"New message from queue, putting in DB");
+            databaseContext.Add(new Event<LogMessage>(MQMessage).Data);
+            databaseContext.SaveChanges();
             return true;
         }
 
         private static void OnFilterByLogTypeTextChanged(object sender, TextChangedEventArgs e)
         {
             Trace.WriteLine($"Text changed {e.NewTextValue}");
-        }
-
-        private static bool Contains(LogMessage Message, IReadOnlyList<object> SelectedFilters)
-        {
-            if ( SelectedFilters == null )
-            {
-                return false;
-            }
-            return SelectedFilters.Contains(Message.LogType);
         }
 
         private void OnPropertyChanged(string propertyName)
