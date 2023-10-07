@@ -1,6 +1,4 @@
 ﻿using AV00_Control_Application.ViewModels;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace AV00_Control_Application.Views
 {
@@ -20,5 +18,7 @@ namespace AV00_Control_Application.Views
         {
             var _ = viewModel.OnLogTypeViewSelectionChangedAsync(sender, e);
         }
+
+        //TODO: Implement autoscroll behind a toggle. Periodically scroll to the bottom if scroll-cursor not at bottom.
     }
 }

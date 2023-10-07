@@ -83,6 +83,7 @@
                     x:Name="FilteredEventsView"
                     ItemsSource="{Binding FilteredEventStream}"
                     SelectionMode="Single"
+                    ItemsUpdatingScrollMode="KeepScrollOffset"
                     VerticalScrollBarVisibility="Always">
                     <CollectionView.Header>
                         <Grid ColumnDefinitions="2*,2*,*,*,4*">

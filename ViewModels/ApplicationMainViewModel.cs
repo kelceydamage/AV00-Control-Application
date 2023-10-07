@@ -56,6 +56,7 @@ namespace AV00_Control_Application.ViewModels
                     databaseContext.SaveChanges();
                     if (currentFilter.Contains(dummyData.LogType))
                     {
+                        Trace.WriteLine($"Adding new message");
                         FilteredEventStream.Add(dummyData);
                     }
                 }
@@ -72,9 +73,9 @@ namespace AV00_Control_Application.ViewModels
             IQueryable<LogMessage> query = from message in databaseContext.LogMessages
                                   where currentFilter.Contains(message.LogType)
                                   select message;
-            var queryResults = query.ToList();
+            var queryResults = query.Take(100).ToList();
             Trace.WriteLine($"Query Res Count: {queryResults.Count}");
-            filteredEventStream = new(query);
+            filteredEventStream = new(query.Take(100));
             OnPropertyChanged(nameof(FilteredEventStream));
         }
 
