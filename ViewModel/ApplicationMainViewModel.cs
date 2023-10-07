@@ -1,5 +1,6 @@
 ﻿using AV00_Shared.Logging;
 using AV00_Shared.Messages;
+using NetMQ;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,25 +18,23 @@ namespace AV00_Control_Application.ViewModel
         public EnumLogMessageType[] EnumLogMessageTypePicker { get => Enum.GetValues<EnumLogMessageType>(); }
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
+        private readonly Task continualDatabaseUpdateTask;
 
-        public ApplicationMainViewModel() //ITransportClient TransportClient)
+        public ApplicationMainViewModel(ITransportClient TransportClient)
         {
             transportClient = TransportClient;
+            TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-            eventStream = new() { dummyData };
-            for (var i = 0; i < 20; i++)
-            {
-                dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-                eventStream.Add(dummyData);
-            }
-            filteredEventStream = new(EventStream);
+            //eventStream = new() { dummyData };
+            filteredEventStream = new() { dummyData };
+            continualDatabaseUpdateTask = ContinualDatabaseUpdateAsync();
         }
 
         public void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Trace.WriteLine($"Selection changed {e.CurrentSelection}");
             List<LogMessage> TempFiltered;
-            TempFiltered = EventStream.Where(logMessage => Contains(logMessage, e.CurrentSelection)).ToList();
+            TempFiltered = FilteredEventStream.Where(logMessage => Contains(logMessage, e.CurrentSelection)).ToList();
             for (int i = FilteredEventStream.Count - 1; i >= 0; i--)
             {
                 var item = FilteredEventStream[i];
@@ -52,6 +51,29 @@ namespace AV00_Control_Application.ViewModel
                     FilteredEventStream.Add(item);
                 }
             }
+        }
+
+        private async Task ContinualDatabaseUpdateAsync()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (FilteredEventStream.Count < 200)
+                    {
+                        LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
+                        FilteredEventStream.Add(dummyData);
+                    }
+                    TransportClient.ProcessPendingEventsAsync();
+                    Thread.Sleep(1000);
+                }
+            });
+        }
+
+        private static bool OnMessageReceiveCallback(NetMQMessage MQMessage)
+        {
+            Trace.WriteLine($"New message from queue, putting in DB");
+            return true;
         }
 
         private void OnFilterByLogTypeTextChanged(object sender, TextChangedEventArgs e)
