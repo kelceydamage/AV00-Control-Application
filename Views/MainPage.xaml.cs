@@ -1,7 +1,7 @@
-﻿using AV00_Control_Application.ViewModel;
+﻿using AV00_Control_Application.ViewModels;
 using System.Diagnostics;
 
-namespace AV00_Control_Application.View
+namespace AV00_Control_Application.Views
 {
     public partial class MainPage : ContentPage
     {

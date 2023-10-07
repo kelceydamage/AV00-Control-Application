@@ -1,5 +1,5 @@
 ﻿using AV00_Shared.Logging;
-using AV00_Shared.Messages;
+using AV00_Shared.Models;
 using Microsoft.Maui.Layouts;
 using NetMQ;
 using System.Collections.ObjectModel;
@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Transport.Client;
 
-namespace AV00_Control_Application.ViewModel
+namespace AV00_Control_Application.ViewModels
 {
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {

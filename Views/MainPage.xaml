@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ExternModel="clr-namespace:AV00_Shared.Messages;assembly=AV00-Shared"
-             xmlns:Model="clr-namespace:AV00_Control_Application.Model"
-             xmlns:Control="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
-             xmlns:ViewModel="clr-namespace:AV00_Control_Application.ViewModel"
-             x:Class="AV00_Control_Application.View.MainPage"
+             xmlns:ExternModels="clr-namespace:AV00_Shared.Models;assembly=AV00-Shared"
+             xmlns:Models="clr-namespace:AV00_Control_Application.Models"
+             xmlns:Controls="clr-namespace:Microsoft.Maui.Controls.Compatibility;assembly=Microsoft.Maui.Controls.Compatibility"
+             xmlns:ViewModels="clr-namespace:AV00_Control_Application.ViewModels"
+             x:Class="AV00_Control_Application.Views.MainPage"
              x:Name="mainPage">
 
     <ScrollView>
@@ -94,26 +94,26 @@
                         </Grid>
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="ExternModel:LogMessage">
+                        <DataTemplate x:DataType="ExternModels:LogMessage">
                             <Grid ColumnDefinitions="2*,2*,*,*,4*">
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=TimeStamp}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=TimeStamp}" 
                                     Grid.Column="0"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Id}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=Id}" 
                                     Grid.Column="1"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=ServiceName}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=ServiceName}" 
                                     Grid.Column="2"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=LogType}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=LogType}" 
                                     Grid.Column="3"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModel:LogMessage}}, Path=Message}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=Message}" 
                                     Grid.Column="4"
                                     FontSize="10"/>
                             </Grid>

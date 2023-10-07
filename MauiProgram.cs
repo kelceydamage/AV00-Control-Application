@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Transport.Client;
-using AV00_Control_Application.ViewModel;
+using AV00_Control_Application.ViewModels;
 using AV00_Shared.Configuration;
-using AV00_Control_Application.View;
+using AV00_Control_Application.Views;
+using AV00_Control_Application.Models;
 
 namespace AV00_Control_Application
 {
@@ -22,6 +23,11 @@ namespace AV00_Control_Application
             builder.Services.AddSingleton<ITransportClient, TransportClient>();
             builder.Services.AddSingleton<ApplicationMainViewModel>();
             builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddDbContext<ApplicationDbContext>();
+
+            var dbContext = new ApplicationDbContext();
+            dbContext.Database.EnsureCreated();
+            dbContext.Dispose();
 
 #if DEBUG
             builder.Logging.AddDebug();
