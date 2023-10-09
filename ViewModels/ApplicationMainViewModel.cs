@@ -33,10 +33,10 @@ namespace AV00_Control_Application.ViewModels
             filteredEventStream = new() { dummyData };
             continualDatabaseUpdateTask = StartDatabaseUpdateThread();
         }
-
-        public async Task OnLogTypeViewSelectionChangedAsync(object sender, SelectionChangedEventArgs e)
+        
+        public async Task OnLogTypeViewSelectionChangedAsync(object Sender, SelectionChangedEventArgs EventArgs)
         {
-            await Task.Run(() => UpdateFilteredEventStream(e));
+            await Task.Run(() => UpdateFilteredEventStream(EventArgs));
         }
 
         private Task StartDatabaseUpdateThread()

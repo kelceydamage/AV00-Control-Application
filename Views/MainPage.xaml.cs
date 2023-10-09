@@ -14,9 +14,9 @@ namespace AV00_Control_Application.Views
         }
 
         //TODO: This feels bad... Investigating.
-        private void OnLogTypeViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnLogTypeViewSelectionChanged(object Sender, SelectionChangedEventArgs EventArgs)
         {
-            var _ = viewModel.OnLogTypeViewSelectionChangedAsync(sender, e);
+            var _ = viewModel.OnLogTypeViewSelectionChangedAsync(Sender, EventArgs);
         }
 
         //TODO: Implement autoscroll behind a toggle. Periodically scroll to the bottom if scroll-cursor not at bottom.
