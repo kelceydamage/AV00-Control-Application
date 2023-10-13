@@ -15,8 +15,8 @@ namespace AV00_Control_Application.ViewModels
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<LogMessage> FilteredEventStream { get => filteredEventStream; }
-        private ObservableCollection<LogMessage> filteredEventStream;
+        public ObservableCollection<LogMessage> FilteredEventStream { get; set; }
+        public LogMessage LatestLogMessage { get; set; }
         public EnumLogMessageType[] EnumLogMessageTypePicker { get => Enum.GetValues<EnumLogMessageType>(); }
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
@@ -30,13 +30,19 @@ namespace AV00_Control_Application.ViewModels
             transportClient = DITransportClient;
             TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
             LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
-            filteredEventStream = new() { dummyData };
+            FilteredEventStream = new() { dummyData };
+            LatestLogMessage = FilteredEventStream.Last();
             continualDatabaseUpdateTask = StartDatabaseUpdateThread();
         }
         
         public async Task OnLogTypeViewSelectionChangedAsync(object Sender, SelectionChangedEventArgs EventArgs)
         {
             await Task.Run(() => UpdateFilteredEventStream(EventArgs));
+        }
+
+        public void OnLogTypeViewSelectionChanged(object Sender, SelectionChangedEventArgs EventArgs)
+        {
+            UpdateFilteredEventStream(EventArgs);
         }
 
         private Task StartDatabaseUpdateThread()
@@ -58,6 +64,7 @@ namespace AV00_Control_Application.ViewModels
                     {
                         Trace.WriteLine($"Adding new message");
                         FilteredEventStream.Add(dummyData);
+                        LatestLogMessage = dummyData;
                     }
                 }
                 await TransportClient.ProcessPendingEventsAsync();
@@ -76,7 +83,8 @@ namespace AV00_Control_Application.ViewModels
             // Remove once satisfied with debugging.
             Trace.WriteLine($"Query Res Count: {query.Count()}");
 
-            filteredEventStream = new(query.Take(100));
+            FilteredEventStream = new(query.Take(100));
+            LatestLogMessage = FilteredEventStream.Last();
             OnPropertyChanged(nameof(FilteredEventStream));
         }
 

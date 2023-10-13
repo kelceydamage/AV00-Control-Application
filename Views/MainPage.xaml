@@ -77,13 +77,16 @@
                 RowSpacing="6"
                 ColumnSpacing="6">
                 <CollectionView 
+                    RemainingItemsThreshold="4"
                     Grid.Column="0"
                     Grid.Row="2"
                     HeightRequest="400"
                     x:Name="FilteredEventsView"
+                    Scrolled="CollectionView_Scrolled"
                     ItemsSource="{Binding FilteredEventStream}"
                     SelectionMode="Single"
-                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                    VerticalOptions="FillAndExpand"
+                    ItemsUpdatingScrollMode="KeepLastItemInView"
                     VerticalScrollBarVisibility="Always">
                     <CollectionView.Header>
                         <Grid ColumnDefinitions="2*,2*,*,*,4*">

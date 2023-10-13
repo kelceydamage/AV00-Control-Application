@@ -1,4 +1,7 @@
 ﻿using AV00_Control_Application.ViewModels;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace AV00_Control_Application.Views
 {
@@ -13,16 +16,27 @@ namespace AV00_Control_Application.Views
             InitializeComponent();
         }
 
-        //TODO: This feels bad... Investigating.
         private void OnLogTypeViewSelectionChanged(object Sender, SelectionChangedEventArgs EventArgs)
         {
-            var _ = viewModel.OnLogTypeViewSelectionChangedAsync(Sender, EventArgs);
+            viewModel.OnLogTypeViewSelectionChanged(Sender, EventArgs);
         }
 
-        //TODO: Implement autoscroll behind a toggle. Periodically scroll to the bottom if scroll-cursor not at bottom.
-        // Skip, Take when scroll to top. Always render only 100 latest and removes oldest.
-        // Is it possible to keep skip/take pagination values in sync with live collection upto
-        // point where the old query is no longer valid? (Ex: select->100, then 100 new live events pop in,
-        // and we need a new select query as we can no longer scroll-back)
+        private void CollectionView_Scrolled(object sender, ItemsViewScrolledEventArgs e)
+        {
+            if (DeviceInfo.Current.Platform != DevicePlatform.WinUI)
+            {
+                return;
+            }
+
+            //NOTE: workaround on windows to fire collectionview itemthresholdreached command, because it does not work on windows
+            if (sender is CollectionView cv && cv is IElementController element)
+            {
+                var count = element.LogicalChildren.Count;
+                if (e.LastVisibleItemIndex + 1 - count + cv.RemainingItemsThreshold >= 0)
+                {
+                    // Implement new dataloading for incremental loading
+                }
+            }
+        }
     }
 }
