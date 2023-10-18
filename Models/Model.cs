@@ -7,7 +7,7 @@ namespace AV00_Control_Application.Models
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<LogMessage> LogMessages { get; set; }
+        public DbSet<LogEventModel> LogMessages { get; set; }
 
         public ApplicationDbContext()
         {
@@ -25,7 +25,7 @@ namespace AV00_Control_Application.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(LogMessageConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(LogEventModelConfiguration).Assembly);
         }
     }
 }

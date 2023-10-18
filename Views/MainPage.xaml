@@ -98,26 +98,26 @@
                         </Grid>
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="ExternModels:LogMessage">
+                        <DataTemplate x:DataType="ExternModels:LogEventModel">
                             <Grid ColumnDefinitions="2*,2*,*,*,4*">
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=TimeStamp}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogEventModel}}, Path=TimeStamp}" 
                                     Grid.Column="0"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=Id}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogEventModel}}, Path=Id}" 
                                     Grid.Column="1"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=ServiceName}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogEventModel}}, Path=ServiceName}" 
                                     Grid.Column="2"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=LogType}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogEventModel}}, Path=LogType}" 
                                     Grid.Column="3"
                                     FontSize="10"/>
                                 <Label 
-                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogMessage}}, Path=Message}" 
+                                    Text="{Binding Source={RelativeSource AncestorType={x:Type ExternModels:LogEventModel}}, Path=Message}" 
                                     Grid.Column="4"
                                     FontSize="10"/>
                             </Grid>

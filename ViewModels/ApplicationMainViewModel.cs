@@ -8,15 +8,17 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using Transport.Client;
-using Transport.Messages;
+using Transport.Event;
 
 namespace AV00_Control_Application.ViewModels
 {
+    using LogEvent = Event<LogEventModel>;
+
     public partial class ApplicationMainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<LogMessage> FilteredEventStream { get; set; }
-        public LogMessage LatestLogMessage { get; set; }
+        public ObservableCollection<LogEventModel> FilteredEventStream { get; set; }
+        public LogEventModel LatestLogMessage { get; set; }
         public EnumLogMessageType[] EnumLogMessageTypePicker { get => Enum.GetValues<EnumLogMessageType>(); }
         public ITransportClient TransportClient => transportClient;
         private readonly ITransportClient transportClient;
@@ -29,7 +31,7 @@ namespace AV00_Control_Application.ViewModels
             databaseContext = DatabaseContext;
             transportClient = DITransportClient;
             TransportClient.RegisterServiceEventCallback("LogService", OnMessageReceiveCallback);
-            LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
+            LogEventModel dummyData = new("TestService", EnumLogMessageType.Issuing, "This is a test message");
             FilteredEventStream = new() { dummyData };
             LatestLogMessage = FilteredEventStream.Last();
             continualDatabaseUpdateTask = StartDatabaseUpdateThread();
@@ -57,7 +59,7 @@ namespace AV00_Control_Application.ViewModels
             {
                 if (i < 200)
                 {
-                    LogMessage dummyData = new(Guid.NewGuid(), "TestService", EnumLogMessageType.Issuing, "This is a test message");
+                    LogEventModel dummyData = new("TestService", EnumLogMessageType.Issuing, "This is a test message");
                     databaseContext.Add(dummyData);
                     databaseContext.SaveChanges();
                     if (currentFilter.Contains(dummyData.LogType))
@@ -77,7 +79,7 @@ namespace AV00_Control_Application.ViewModels
         {
             currentFilter = EventArgs.CurrentSelection;
             Trace.WriteLine($"Selection changed {EventArgs.CurrentSelection}");
-            IQueryable<LogMessage> query = from message in databaseContext.LogMessages
+            IQueryable<LogEventModel> query = from message in databaseContext.LogMessages
                                   where currentFilter.Contains(message.LogType)
                                   select message;
             // Remove once satisfied with debugging.
@@ -91,7 +93,7 @@ namespace AV00_Control_Application.ViewModels
         private bool OnMessageReceiveCallback(NetMQMessage MQMessage)
         {
             Trace.WriteLine($"New message from queue, putting in DB");
-            databaseContext.Add(new Event<LogMessage>(MQMessage).Data);
+            databaseContext.Add(new LogEvent(MQMessage).Model);
             databaseContext.SaveChanges();
             return true;
         }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AV00_Control_Application.Models.Configuration
 {
-    internal class LogMessageConfiguration : IEntityTypeConfiguration<LogMessage>
+    internal class LogEventModelConfiguration : IEntityTypeConfiguration<LogEventModel>
     {
-        public void Configure(EntityTypeBuilder<LogMessage> builder)
+        public void Configure(EntityTypeBuilder<LogEventModel> builder)
         {
             builder.ToTable("LogMessages");
 
