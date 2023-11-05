@@ -5,6 +5,7 @@ using AV00_Shared.Configuration;
 using AV00_Control_Application.Views;
 using AV00_Control_Application.Models;
 
+// Build trigger
 namespace AV00_Control_Application
 {
     public static class MauiProgram
