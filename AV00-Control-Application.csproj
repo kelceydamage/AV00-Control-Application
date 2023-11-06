@@ -68,12 +68,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\AV00-Shared\AV00-Shared.csproj" />
-	  <ProjectReference Include="..\AV00-Transport\AV00-Transport.csproj" />
+	  <Folder Include="Database\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Database\" />
+	  <ProjectReference Include="..\AV00-Shared\AV00-Shared\AV00-Shared.csproj" />
+	  <ProjectReference Include="..\AV00-Transport\AV00-Transport\AV00-Transport.csproj" />
 	</ItemGroup>
 
 	<!-- Build Properties must be defined within these property groups to ensure successful publishing
